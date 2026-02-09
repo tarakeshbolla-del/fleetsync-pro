@@ -1,1 +1,1 @@
-web: cd server && npm install && npx prisma migrate deploy && npx prisma db seed && npm start
+web: cd server && npm install && node node_modules/prisma/build/index.js migrate deploy && node node_modules/prisma/build/index.js db seed && npm start
