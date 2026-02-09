@@ -1,0 +1,215 @@
+### FleetSync Pro API Tests
+### Base URL
+@baseUrl = http://localhost:3001
+
+### ========== HEALTH CHECK ==========
+
+### Health Check
+GET {{baseUrl}}/health
+
+### ========== AUTH ==========
+
+### Register Admin
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test.admin@fleetsync.com.au",
+  "password": "password123",
+  "name": "Test Admin",
+  "role": "ADMIN"
+}
+
+### Login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@fleetsync.com.au",
+  "password": "admin123"
+}
+
+### ========== VEHICLES ==========
+
+### Get All Vehicles
+GET {{baseUrl}}/api/vehicles
+
+### Get Vehicle by ID (replace with actual ID)
+GET {{baseUrl}}/api/vehicles/{{vehicleId}}
+
+### Create Vehicle
+POST {{baseUrl}}/api/vehicles
+Content-Type: application/json
+
+{
+  "vin": "TEST123456789",
+  "plate": "TST001",
+  "make": "Tesla",
+  "model": "Model 3",
+  "year": 2024,
+  "color": "White",
+  "regoExpiry": "2025-06-15",
+  "ctpExpiry": "2025-08-20",
+  "pinkSlipExpiry": "2025-12-01",
+  "weeklyRate": 550,
+  "bondAmount": 1500
+}
+
+### Check Vehicle Compliance
+POST {{baseUrl}}/api/vehicles/{{vehicleId}}/check-compliance
+
+### ========== DRIVERS ==========
+
+### Get All Drivers
+GET {{baseUrl}}/api/drivers
+
+### Get Driver by ID
+GET {{baseUrl}}/api/drivers/{{driverId}}
+
+### Register Driver
+POST {{baseUrl}}/api/drivers
+Content-Type: application/json
+
+{
+  "name": "Test Driver",
+  "email": "test.driver@email.com",
+  "phone": "0499999999",
+  "licenseNo": "NSW9999999",
+  "licenseExpiry": "2027-01-01",
+  "passportNo": "PA9999999"
+}
+
+### Register Driver with VEVO DENIED (passport ends in 0000)
+POST {{baseUrl}}/api/drivers
+Content-Type: application/json
+
+{
+  "name": "Denied Driver",
+  "email": "denied.driver@email.com",
+  "phone": "0488888888",
+  "licenseNo": "NSW8888888",
+  "passportNo": "PA8880000"
+}
+
+### Approve Driver
+POST {{baseUrl}}/api/drivers/{{driverId}}/approve
+
+### Block Driver
+POST {{baseUrl}}/api/drivers/{{driverId}}/block
+
+### Run VEVO Check
+POST {{baseUrl}}/api/drivers/{{driverId}}/vevo-check
+
+### ========== RENTALS ==========
+
+### Get All Rentals
+GET {{baseUrl}}/api/rentals
+
+### Get Active Rentals
+GET {{baseUrl}}/api/rentals/active
+
+### Create Rental
+POST {{baseUrl}}/api/rentals
+Content-Type: application/json
+
+{
+  "driverId": "{{driverId}}",
+  "vehicleId": "{{vehicleId}}",
+  "bondAmount": 1000,
+  "weeklyRate": 450
+}
+
+### End Rental
+POST {{baseUrl}}/api/rentals/{{rentalId}}/end
+
+### ========== INVOICES ==========
+
+### Get All Invoices
+GET {{baseUrl}}/api/invoices
+
+### Get Pending Invoices
+GET {{baseUrl}}/api/invoices?status=PENDING
+
+### Generate Invoice
+POST {{baseUrl}}/api/invoices/generate
+Content-Type: application/json
+
+{
+  "rentalId": "{{rentalId}}",
+  "tolls": 25.50,
+  "fines": 0,
+  "credits": 10
+}
+
+### Mark Invoice as Paid
+POST {{baseUrl}}/api/invoices/{{invoiceId}}/pay
+
+### Run Billing Cycle
+POST {{baseUrl}}/api/invoices/run-billing-cycle
+
+### Check Overdue Invoices
+POST {{baseUrl}}/api/invoices/check-overdue
+
+### ========== ONBOARDING ==========
+
+### Generate Magic Link
+POST {{baseUrl}}/api/onboarding/generate-link
+Content-Type: application/json
+
+{
+  "email": "new.driver@email.com"
+}
+
+### Validate Token
+GET {{baseUrl}}/api/onboarding/validate/{{token}}
+
+### Verify Passport (VEVO Check)
+POST {{baseUrl}}/api/onboarding/verify
+Content-Type: application/json
+
+{
+  "passportNo": "PA1234567"
+}
+
+### Verify Passport - Should DENY (ends in 0000)
+POST {{baseUrl}}/api/onboarding/verify
+Content-Type: application/json
+
+{
+  "passportNo": "PA1230000"
+}
+
+### ========== COMPLIANCE ==========
+
+### Run Compliance Check
+POST {{baseUrl}}/api/compliance/check
+
+### Get Unresolved Alerts
+GET {{baseUrl}}/api/compliance/alerts
+
+### Get Upcoming Expiries
+GET {{baseUrl}}/api/compliance/upcoming-expiries
+
+### Resolve Alert
+POST {{baseUrl}}/api/compliance/alerts/{{alertId}}/resolve
+
+### ========== ANALYTICS ==========
+
+### Get Dashboard Stats
+GET {{baseUrl}}/api/analytics/dashboard
+
+### Get Driver Earnings
+GET {{baseUrl}}/api/analytics/drivers/{{driverId}}/earnings?weeks=4
+
+### Get ROI Summary
+GET {{baseUrl}}/api/analytics/roi
+
+### ========== TOLLS ==========
+
+### Get Tolls
+GET {{baseUrl}}/api/tolls
+
+### Upload Toll CSV (use form-data in Postman/Insomnia)
+# POST {{baseUrl}}/api/tolls/upload
+# Content-Type: multipart/form-data
+# file: tolls.csv
