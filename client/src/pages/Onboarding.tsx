@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Car, Upload, Check, AlertTriangle, User, FileText, Shield } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { Car, Check, AlertTriangle, User, Shield } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -21,7 +21,6 @@ interface OnboardingData {
 
 export function OnboardingPage() {
     const { token } = useParams<{ token: string }>();
-    const navigate = useNavigate();
     const [step, setStep] = useState<Step>('validate');
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(true);
@@ -118,9 +117,9 @@ export function OnboardingPage() {
                         {['Details', 'Verification', 'Complete'].map((label, i) => (
                             <div key={label} className="flex items-center">
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${i === 0 && step === 'form' ? 'bg-white text-blue-600' :
-                                        i === 1 && step === 'verify' ? 'bg-white text-blue-600' :
-                                            i === 2 && step === 'complete' ? 'bg-emerald-500 text-white' :
-                                                'bg-white/20 text-white/60'
+                                    i === 1 && step === 'verify' ? 'bg-white text-blue-600' :
+                                        i === 2 && step === 'complete' ? 'bg-emerald-500 text-white' :
+                                            'bg-white/20 text-white/60'
                                     }`}>
                                     {i === 2 && step === 'complete' ? <Check className="w-4 h-4" /> : i + 1}
                                 </div>
